@@ -1,5 +1,3 @@
-// Day 1
-
 let boss = {};
 
 const BOSS_NAMES = ["Zorgon", "Joorian", "Zellephen", "Quvlix", "Massulune"];
@@ -31,4 +29,4 @@ async function main() {
   newBoss();
 };
 
-main();
+export { main };

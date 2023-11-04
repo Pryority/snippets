@@ -1,0 +1,16 @@
+{
+  "name": "snippets",
+  "version": "1.0.0",
+  "description": "Goal of this repo is to practice writing code daily (hopefully) with as little help as possible from AI tools, youtube videos, etc. I hope I can write at least one or more snippets per day, any language doesn't matter.",
+  "main": "cli.js",
+  "type": "module",
+  "scripts": {
+    "cli": "node cli"
+  },
+  "keywords": [],
+  "author": "Matthew Pryor",
+  "license": "ISC",
+  "dependencies": {
+    "inquirer": "^9.2.11"
+  }
+}
