@@ -28,7 +28,12 @@ function newBoss() {
 };
 
 async function main() {
-  newBoss();
-};
+  try {
+    newBoss();
+  } catch(error) {
+    console.error(`Error occurred: ${error}`)
+  }
+}
 
 export { main };
+

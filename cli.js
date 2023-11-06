@@ -1,13 +1,19 @@
 import inquirer from 'inquirer';
 import path from 'path';
 import { fileURLToPath } from 'url';
-import { readdir, readFile } from 'fs/promises';
-import { exec } from 'child_process';
+import { readdir } from 'fs/promises';
+import { execSync } from 'child_process';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const scriptsDir = path.join(__dirname, 'scripts');
 const filterFiles = (file) => !file.startsWith('.');
+
+const interpreters = {
+  js: 'bun',
+  cjs: 'node',
+  py: 'python3',
+};
 
 async function run() {
   try {
@@ -21,42 +27,29 @@ async function run() {
       },
     ]);
 
-    const scriptPath = path.join(scriptsDir, dayNum, 'main');
-    const extension = path.extname(scriptPath).slice(1);
-    console.log("scriptPath", scriptPath)
-    console.log("Extension", extension)
+    const filesInDay = await readdir(path.join(scriptsDir, dayNum));
+    const mainFile = filesInDay.find(file => file.startsWith('main') && file !== "main")
 
-    let command;
-
-    switch(extension) {
-      case 'js':
-        command = `node ${scriptPath}.${extension}`
-        break;
-      case 'py':
-        command = `python3 ${scriptPath}.${extension}`
-        break;
-      default:
-        console.log("Unsupported file extension");
-        return;
+    if (!mainFile) {
+      console.log("No valid 'main' file found in the selected day's directory");
+      return;
     }
 
-    console.log(`Code from Day ${dayNum.substring(3)}:\n`, scriptContent); // Use backticks for string interpolation
+    const extension = path.extname(mainFile).slice(1);
+    const interpreter = interpreters[extension];
 
-    exec(command, (error, stdout, stderr) => {
-      console.log("___________________________________________");
-      console.log("------ P R O G R A M    O U T P U T -------");
-      if (error) {
-        console.error(`Error occurred: ${error.message}`);
-        return;
-      }
-      if (stderr) {
-        console.error(`Error occurred: ${stderr}`)
-        return;
-      }
-      console.log(stdout)
-    });
+    if (!interpreter) {
+      console.log("Unsupported file extension");
+      return;
+    }
+
+    const command = `${interpreter} ${path.join(scriptsDir, dayNum, mainFile)}`;
+    console.log(`Executing: ${command}`);
+
+    const output = execSync(command, { encoding: 'utf-8' });
+    console.log(output);
   } catch (error) {
-    console.error(`Error occurred: ${error}`)
+    console.error(`Error occurred: ${error}`);
   }
 }
 
