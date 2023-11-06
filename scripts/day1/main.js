@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 let boss = {};
 
 const BOSS_NAMES = ["Zorgon", "Joorian", "Zellephen", "Quvlix", "Massulune"];
